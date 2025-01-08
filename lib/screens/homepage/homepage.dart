@@ -155,24 +155,3 @@ class HomePage extends HookWidget {
     );
   }
 }
-
-
-
-
-
-
-                                //  => Navigator.of(context)
-                            //     .push(MaterialPageRoute(builder: (context) {
-                            //   updateNote;
-                            //   return UpdateNote(
-                            //     note: notes.value[index],
-                            //     index: index,
-                            //   );
-                            // }
-                            //         // => UpdateNote(
-                            //         //     note: notes.value[index], index: index),
-                            //         )),
-                            // child: NoteCard(
-                            //   note: notes.value[index],
-                            //   index: index,
-                            // ),
