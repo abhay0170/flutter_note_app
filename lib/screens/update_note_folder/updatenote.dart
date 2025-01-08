@@ -5,15 +5,12 @@ import 'package:samsung_notes/note_model_folder/notemodel.dart';
 class UpdateNote extends HookWidget {
   final Note note;
   final int index;
-  // final Function(Note updatedNote, int index) onNoteUpdated;
 
   const UpdateNote({
     super.key,
     required this.note,
     required this.index,
-    // required this.onNoteUpdated,
   });
-
   @override
   Widget build(BuildContext context) {
     final updatedTitleController = useTextEditingController(text: note.title);
@@ -22,6 +19,7 @@ class UpdateNote extends HookWidget {
     void updateNote() {
       if (updatedTitleController.text.isEmpty ||
           updatedBodyController.text.isEmpty) {
+            Navigator.pop(context);
             return;
             //  Navigator.pop(context)
       }
@@ -31,6 +29,8 @@ class UpdateNote extends HookWidget {
       );
       Navigator.pop(context,updatedNote);
     }
+
+    
 
     return Scaffold(
       appBar: AppBar(
@@ -62,9 +62,10 @@ class UpdateNote extends HookWidget {
             tooltip: "Search",
           ),
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert_rounded),
-            tooltip: "More Options",
+            onPressed: () {
+            },
+            icon: const Icon(Icons.delete),
+            tooltip: "delete",//////////////////////////////////////////////////////////  tap delete to move to recycle bin
           )
         ],
       ),

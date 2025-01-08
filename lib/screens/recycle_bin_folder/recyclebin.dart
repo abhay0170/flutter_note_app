@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-// import 'package:samsung_notes/note_model_folder/note_card.dart';
-import 'package:samsung_notes/screens/recycle_bin_folder/binned_note_model.dart';
+import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
+import 'package:samsung_notes/note_model_folder/recycle_card.dart';
 
 class Recyclebin extends HookWidget {
+  // final Trash trash;
+  // final int index;
+  
+
   const Recyclebin({
     super.key,
+    // required this.trash,
+    // required this.index,
   });
 
   @override
   Widget build(BuildContext context) {
-    final binnedNote = useState<List<Trash>>([]);
+    final bin = useState<List<Trash>>([]);
 
     return Scaffold(
       body: CustomScrollView(
@@ -41,12 +47,16 @@ class Recyclebin extends HookWidget {
             backgroundColor: Theme.of(context).colorScheme.surface,
             pinned: true,
             toolbarHeight: 50,
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(Icons.menu)),
             title: Title(
               color: Theme.of(context).colorScheme.surface,
               child: Text("Recycle Bin"),
             ),
             actions: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.picture_as_pdf)),
               IconButton(onPressed: () {}, icon: Icon(Icons.search)),
               IconButton(onPressed: () {}, icon: Icon(Icons.more_vert_rounded)),
             ],
@@ -65,11 +75,10 @@ class Recyclebin extends HookWidget {
                       crossAxisSpacing: 10.0,
                       mainAxisSpacing: 10.0,
                     ),
-                    itemCount: binnedNote.value.length,
+                    itemCount: bin.value.length,
                     itemBuilder: (context, index) {
-                      // return NoteCard(note: binnedNote.value[index] , index: index);
-                      return;
-                      // NoteCard();
+                      return BinnedNoteCard(
+                          bin: bin.value[index], index: index);
                     }),
               ),
             ),
