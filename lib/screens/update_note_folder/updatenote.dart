@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
 import 'package:samsung_notes/note_model_folder/notemodel.dart';
 
 class UpdateNote extends HookWidget {
+  final List<Trash> bin;
   final Note note;
   final int index;
 
-  const UpdateNote({
-    super.key,
-    required this.note,
-    required this.index,
-  });
+  const UpdateNote(
+      {super.key, required this.note, required this.bin, required this.index});
+
   @override
   Widget build(BuildContext context) {
     final updatedTitleController = useTextEditingController(text: note.title);
@@ -19,18 +19,24 @@ class UpdateNote extends HookWidget {
     void updateNote() {
       if (updatedTitleController.text.isEmpty ||
           updatedBodyController.text.isEmpty) {
-            Navigator.pop(context);
-            return;
-            //  Navigator.pop(context)
+        Navigator.pop(context);
+        return;
       }
       final updatedNote = Note(
         title: updatedTitleController.text,
         body: updatedBodyController.text,
       );
-      Navigator.pop(context,updatedNote);
+      Navigator.pop(context, updatedNote);
     }
 
-    
+    void deleteNote() {
+      bin.add(Trash(
+          deletedTitle: updatedTitleController.text,
+          deletedBody: updatedBodyController.text));
+          print("title: ${bin.last.deletedTitle}, body: ${bin.last.deletedBody}");
+          Navigator.pop(context,null);
+
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -63,9 +69,11 @@ class UpdateNote extends HookWidget {
           ),
           IconButton(
             onPressed: () {
+              deleteNote();
             },
             icon: const Icon(Icons.delete),
-            tooltip: "delete",//////////////////////////////////////////////////////////  tap delete to move to recycle bin
+            tooltip:
+                "delete", //////////////////////////////////////////////  tap delete to move to recycle bin
           )
         ],
       ),

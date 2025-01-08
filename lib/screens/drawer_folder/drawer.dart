@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer_content.dart';
 import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer_theme.dart';
-import 'package:samsung_notes/screens/recycle_bin_folder/recyclebin.dart';
+import 'package:samsung_notes/screens/homepage/homepage.dart';
 
 class NotesDrower extends HookWidget {
   static final GlobalKey<ScaffoldState> drowerKey = GlobalKey();
-  const NotesDrower({super.key});
+  
+  
+  const NotesDrower({super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +23,7 @@ class NotesDrower extends HookWidget {
             ListTile(
               trailing: IconButton(
                   onPressed: () {
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => Recyclebin(bin: bin, index: index),))
                     // Navigator.push(context,
                     //     MaterialPageRoute(builder: (context) => Settings()));
                   },
@@ -67,7 +71,7 @@ class NotesDrower extends HookWidget {
                 destination: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Recyclebin())
+                    MaterialPageRoute(builder: (context) => HomePage())
                   );
                 },
                 child: Row(

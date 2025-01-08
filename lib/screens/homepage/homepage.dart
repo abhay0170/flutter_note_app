@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
 import 'package:samsung_notes/note_model_folder/note_card.dart';
 import 'package:samsung_notes/note_model_folder/notemodel.dart';
 import 'package:samsung_notes/screens/create_note_folder/create_note.dart';
@@ -12,6 +13,7 @@ class HomePage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notes = useState<List<Note>>([]);
+    final bin = useState<List<Trash>>([]);
 
     void addNote(Note note) {
       notes.value = [...notes.value, note];
@@ -115,11 +117,16 @@ class HomePage extends HookWidget {
                                   .push(MaterialPageRoute(
                                 builder: (context) => UpdateNote(
                                   note: notes.value[index],
+                                  bin: bin.value,
                                   index: index,
                                 ),
                               ));
-                              if (updatedNote != null) {
-                                newUpdateNote(updatedNote, index);
+                              if (updatedNote == null) {
+                                notes.value.removeAt(index); 
+                                notes.value = [...notes.value];
+                              } else {
+                                newUpdateNote(updatedNote,
+                                    index); 
                               }
                             },
                             child: NoteCard(
