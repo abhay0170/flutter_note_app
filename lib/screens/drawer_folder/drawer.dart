@@ -25,10 +25,8 @@ class NotesDrower extends HookWidget {
           padding: EdgeInsets.only(top: 10),
           children: [
             ListTile(
-              trailing: IconButton(
-                  onPressed: () {
-                  },
-                  icon: Icon(Icons.settings)),
+              trailing:
+                  IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
             ),
             DrawerContainer(
                 destination: () => Navigator.pop(context),
@@ -48,8 +46,7 @@ class NotesDrower extends HookWidget {
                   ],
                 )),
             DrawerContainer(
-                destination: () {
-                },
+                destination: () {},
                 child: Row(
                   children: [
                     Icon(
@@ -67,8 +64,12 @@ class NotesDrower extends HookWidget {
                 )),
             DrawerContainer(
                 destination: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Recyclebin(bin: bin,)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Recyclebin(
+                                bin: bin,
+                              )));
                 },
                 child: Row(
                   children: [
@@ -90,8 +91,7 @@ class NotesDrower extends HookWidget {
               indent: 10,
             ),
             DrawerContainer(
-                destination: () {
-                },
+                destination: () {},
                 child: Row(
                   children: [
                     Icon(
