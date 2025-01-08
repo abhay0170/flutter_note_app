@@ -24,8 +24,10 @@ class HomePage extends HookWidget {
     }
 
     return Scaffold(
-      key: NotesDrower.drowerKey,
-      drawer: const NotesDrower(),
+      key: NotesDrower.drawerKey,
+      drawer:  NotesDrower(
+        bin: bin.value,
+      ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         slivers: [
@@ -122,11 +124,10 @@ class HomePage extends HookWidget {
                                 ),
                               ));
                               if (updatedNote == null) {
-                                notes.value.removeAt(index); 
+                                notes.value.removeAt(index);
                                 notes.value = [...notes.value];
                               } else {
-                                newUpdateNote(updatedNote,
-                                    index); 
+                                newUpdateNote(updatedNote, index);
                               }
                             },
                             child: NoteCard(

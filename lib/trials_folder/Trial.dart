@@ -6,14 +6,12 @@ import 'package:samsung_notes/trials_folder/trial_bin.dart';
 
 class DeleteNote extends HookWidget {
 
-
-
   const DeleteNote({super.key});
 
   @override
   Widget build(BuildContext context) {
     final items = useState<List<String>>(['Card 1', 'Card 2', 'Card 3']);
-    final recycleBin = useState<List<String>>([]);
+    final recycleBin = useState<List<String>>(["hahah"]);
 
     return Scaffold(
       appBar: AppBar(

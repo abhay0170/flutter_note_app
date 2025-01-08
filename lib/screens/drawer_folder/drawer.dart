@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
 import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer_content.dart';
 import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer_theme.dart';
-import 'package:samsung_notes/screens/homepage/homepage.dart';
+import 'package:samsung_notes/screens/recycle_bin_folder/recyclebin.dart';
 
 class NotesDrower extends HookWidget {
-  static final GlobalKey<ScaffoldState> drowerKey = GlobalKey();
-  
-  
-  const NotesDrower({super.key,
+  static final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
+
+  final List<Trash> bin;
+
+  const NotesDrower({
+    super.key,
+    required this.bin,
   });
 
   @override
@@ -23,9 +27,6 @@ class NotesDrower extends HookWidget {
             ListTile(
               trailing: IconButton(
                   onPressed: () {
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) => Recyclebin(bin: bin, index: index),))
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => Settings()));
                   },
                   icon: Icon(Icons.settings)),
             ),
@@ -48,9 +49,6 @@ class NotesDrower extends HookWidget {
                 )),
             DrawerContainer(
                 destination: () {
-                  // Navigator.push(context,
-                  //   MaterialPageRoute(builder: (context) => SharedNotes()),
-                  // );
                 },
                 child: Row(
                   children: [
@@ -69,10 +67,8 @@ class NotesDrower extends HookWidget {
                 )),
             DrawerContainer(
                 destination: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage())
-                  );
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Recyclebin(bin: bin,)));
                 },
                 child: Row(
                   children: [
@@ -95,10 +91,6 @@ class NotesDrower extends HookWidget {
             ),
             DrawerContainer(
                 destination: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => Folders()),
-                  // );
                 },
                 child: Row(
                   children: [

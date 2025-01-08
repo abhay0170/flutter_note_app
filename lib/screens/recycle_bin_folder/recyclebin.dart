@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-// import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
-// import 'package:samsung_notes/note_model_folder/recycle_card.dart';
+import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
+import 'package:samsung_notes/note_model_folder/recycle_card.dart';
 
 class Recyclebin extends HookWidget {
-  final List<String> bin;
-  final int index;
+  final List<Trash> bin;
   
-
   const Recyclebin({
     super.key,
     required this.bin,
-    required this.index,
   });
 
   @override
   Widget build(BuildContext context) {
-    // final bin = useState<List<Trash>>([ Trash(deletedTitle: "deletedTitle", deletedBody: "deletedBody")]);
-
-
-
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -77,12 +70,12 @@ class Recyclebin extends HookWidget {
                       crossAxisSpacing: 10.0,
                       mainAxisSpacing: 10.0,
                     ),
-                    itemCount:3,
-                    //  bin.value.length,
+                    itemCount:
+                     bin.length,
                     itemBuilder: (context, index) {
-                      return;
-                      // return BinnedNoteCard(
-                          // bin: bin.value[index], index: index);
+                      // return;
+                      return BinnedNoteCard(
+                          bin: bin[index], index: index);
                     }),
               ),
             ),
