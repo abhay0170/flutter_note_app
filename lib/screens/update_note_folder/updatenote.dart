@@ -35,7 +35,6 @@ class UpdateNote extends HookWidget {
           deletedBody: updatedBodyController.text));
           print("title: ${bin.last.deletedTitle}, body: ${bin.last.deletedBody}");
           Navigator.pop(context,null);
-
     }
 
     return Scaffold(

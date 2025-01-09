@@ -4,7 +4,7 @@ import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer
 class DrawerContainer extends StatelessWidget {
   final VoidCallback destination;
   final Widget child;
-  
+
   const DrawerContainer({
     super.key,
     required this.child,
@@ -29,4 +29,3 @@ class DrawerContainer extends StatelessWidget {
     );
   }
 }
-

@@ -4,15 +4,21 @@ import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
 import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer_content.dart';
 import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer_theme.dart';
 import 'package:samsung_notes/screens/recycle_bin_folder/recyclebin.dart';
+import 'package:samsung_notes/trials_folder/trial.dart';
 
 class NotesDrower extends HookWidget {
   static final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
 
   final List<Trash> bin;
+  // final Function(Trash) onRestore;
+  // final Function(Trash) onDelete;
+
 
   const NotesDrower({
     super.key,
     required this.bin,
+    // required this.onRestore,
+    // required this.onDelete
   });
 
   @override
@@ -69,6 +75,8 @@ class NotesDrower extends HookWidget {
                       MaterialPageRoute(
                           builder: (context) => Recyclebin(
                                 bin: bin,
+                                // onRestore: onRestore,
+                                // onDelete: onDelete,
                               )));
                 },
                 child: Row(
@@ -91,7 +99,10 @@ class NotesDrower extends HookWidget {
               indent: 10,
             ),
             DrawerContainer(
-                destination: () {},
+                destination: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => DeleteNote()));
+                },
                 child: Row(
                   children: [
                     Icon(

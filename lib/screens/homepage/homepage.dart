@@ -23,9 +23,15 @@ class HomePage extends HookWidget {
       notes.value[index] = updatedNote;
     }
 
+    // void onRestore(Trash note) {
+    //   trashNotes.value = [...trashNotes.value..remove(note)];
+    //   onNoteRestored(note); // Pass the restored note back
+    //   print('Restored: ${note.deletedTitle}');
+    // }
+
     return Scaffold(
       key: NotesDrower.drawerKey,
-      drawer:  NotesDrower(
+      drawer: NotesDrower(
         bin: bin.value,
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,

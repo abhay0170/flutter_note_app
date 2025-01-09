@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
 import 'package:samsung_notes/note_model_folder/recycle_card.dart';
+import 'package:samsung_notes/screens/recycle_bin_folder/restore.dart';
 
 class Recyclebin extends HookWidget {
   final List<Trash> bin;
-  
+
   const Recyclebin({
     super.key,
     required this.bin,
@@ -13,6 +14,18 @@ class Recyclebin extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final trashNotes = useState<List<Trash>>(List.from(bin));
+
+    void onRestore(Trash note) {
+      trashNotes.value = [...trashNotes.value..remove(note)];
+      // print('Restored: ${note.deletedTitle}');
+    }
+
+    void onDelete(Trash note) {
+      trashNotes.value = [...trashNotes.value..remove(note)];
+      // print('Deleted: ${note.deletedTitle}');
+    }
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -70,12 +83,26 @@ class Recyclebin extends HookWidget {
                       crossAxisSpacing: 10.0,
                       mainAxisSpacing: 10.0,
                     ),
-                    itemCount:
-                     bin.length,
+                    itemCount: trashNotes.value.length,
                     itemBuilder: (context, index) {
-                      // return;
-                      return BinnedNoteCard(
-                          bin: bin[index], index: index);
+                      return GestureDetector(
+                        onTap: () async {
+                          final restoredNote = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => Restore(
+                                bin: trashNotes.value[index],
+                                onRestore: onRestore,
+                                onDelete: onDelete,
+                              ),
+                            ),
+                          );
+
+                          if (restoredNote != null) {
+                            bin.removeAt(index);
+                          }
+                        },
+                        child: BinnedNoteCard(bin: bin[index], index: index),
+                      );
                     }),
               ),
             ),
