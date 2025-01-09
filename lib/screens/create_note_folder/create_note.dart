@@ -63,6 +63,22 @@ class CreateNote extends HookWidget {
           maxLines: null,
         ),
       ),
+      bottomNavigationBar: 
+      Padding(
+        padding: const EdgeInsets.only(bottom: 15),
+        child: Row(
+          children: [
+            IconButton(onPressed: (){}, icon: Icon(Icons.draw)),
+            IconButton(onPressed: (){}, icon: Icon(Icons.check_box_outlined)),
+            IconButton(onPressed: (){}, icon: Icon(Icons.text_fields)),
+            IconButton(onPressed: (){}, icon: Icon(Icons.format_color_text)),
+            IconButton(onPressed: (){}, icon: Icon(Icons.format_paint_outlined)),
+            IconButton(onPressed: (){}, icon: Icon(Icons.add)),/////////////dropdownbuttion ////arrowdropdown
+            IconButton(onPressed: (){}, icon: Icon(Icons.undo_rounded)),
+            IconButton(onPressed: (){}, icon: Icon(Icons.redo_rounded)),
+          ],
+        ),
+      ),
     );
   }
 }
