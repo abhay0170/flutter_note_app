@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
+import 'package:samsung_notes/note_model_folder/notemodel.dart';
 
 class Restore extends HookWidget {
-  final Trash bin;
-  final Function(Trash) onRestore;
-  final Function(Trash) onDelete; // Function to handle restoration
+  final Note bin;
+  final Function(Note) onRestore;
+  final Function(Note) onDelete; // Function to handle restoration
 
   const Restore({
     super.key,
@@ -13,7 +13,6 @@ class Restore extends HookWidget {
     required this.onRestore,
     required this.onDelete,
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class Restore extends HookWidget {
           icon: const Icon(Icons.arrow_back_ios),
         ),
         title: Text(
-          bin.deletedTitle, // Display the deleted title
+          bin.title, // Display the deleted title
           style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         actions: [
@@ -48,7 +47,7 @@ class Restore extends HookWidget {
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
           child: Text(
-            bin.deletedBody, // Display the deleted body
+            bin.body, // Display the deleted body
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
         ),

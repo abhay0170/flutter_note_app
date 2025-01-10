@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
 import 'package:samsung_notes/note_model_folder/notemodel.dart';
 
 class UpdateNote extends HookWidget {
-  final List<Trash> bin;
+  final List<Note> bin;
   final Note note;
   final int index;
 
@@ -30,10 +29,10 @@ class UpdateNote extends HookWidget {
     }
 
     void deleteNote() {
-      bin.add(Trash(
-          deletedTitle: updatedTitleController.text,
-          deletedBody: updatedBodyController.text));
-          print("title: ${bin.last.deletedTitle}, body: ${bin.last.deletedBody}");
+      bin.add(Note(
+          title: updatedTitleController.text,
+          body: updatedBodyController.text));
+          print("title: ${bin.last.title}, body: ${bin.last.body}");
           Navigator.pop(context,null);
     }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
+import 'package:samsung_notes/note_model_folder/notemodel.dart';
 import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer_content.dart';
 import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer_theme.dart';
 import 'package:samsung_notes/screens/recycle_bin_folder/recyclebin.dart';
@@ -9,16 +9,14 @@ import 'package:samsung_notes/trials_folder/trial.dart';
 class NotesDrower extends HookWidget {
   static final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
 
-  final List<Trash> bin;
-  // final Function(Trash) onRestore;
-  // final Function(Trash) onDelete;
+  final List<Note> bin;
+  final void Function(Note) restoreNote;
 
 
   const NotesDrower({
     super.key,
     required this.bin,
-    // required this.onRestore,
-    // required this.onDelete
+    required this.restoreNote
   });
 
   @override
@@ -75,8 +73,7 @@ class NotesDrower extends HookWidget {
                       MaterialPageRoute(
                           builder: (context) => Recyclebin(
                                 bin: bin,
-                                // onRestore: onRestore,
-                                // onDelete: onDelete,
+                                restoreNote: restoreNote,
                               )));
                 },
                 child: Row(

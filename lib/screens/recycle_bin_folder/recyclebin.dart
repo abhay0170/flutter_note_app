@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
+import 'package:samsung_notes/note_model_folder/notemodel.dart';
 import 'package:samsung_notes/note_model_folder/recycle_card.dart';
 import 'package:samsung_notes/screens/recycle_bin_folder/restore.dart';
 
 class Recyclebin extends HookWidget {
-  final List<Trash> bin;
+  final List<Note> bin;
+  final void Function(Note) restoreNote;
 
-  const Recyclebin({
-    super.key,
-    required this.bin,
-  });
+  const Recyclebin({super.key, required this.bin, required this.restoreNote});
 
   @override
   Widget build(BuildContext context) {
-    final trashNotes = useState<List<Trash>>(List.from(bin));
+    final trashNotes = useState<List<Note>>(List.from(bin));
 
-    void onRestore(Trash note) {
+    void onRestore(Note note) {
       trashNotes.value = [...trashNotes.value..remove(note)];
-      // print('Restored: ${note.deletedTitle}');
+      bin.remove(note);
+      restoreNote(note);
     }
 
-    void onDelete(Trash note) {
+    void onDelete(Note note) {
       trashNotes.value = [...trashNotes.value..remove(note)];
-      // print('Deleted: ${note.deletedTitle}');
+      bin.remove(note);
     }
 
     return Scaffold(

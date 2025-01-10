@@ -14,6 +14,10 @@ class DeleteNote extends HookWidget {
       recycleBin.value = List.from(recycleBin.value)..remove(item);
     }
 
+    void permanentlyDeleteItem(String item) {
+      recycleBin.value = List.from(recycleBin.value)..remove(item);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Active Cards'),
@@ -27,6 +31,7 @@ class DeleteNote extends HookWidget {
                   builder: (context) => RecycleBinPage(
                     recycleBin: recycleBin.value,
                     onRestore: restoreItem,
+                    onPermanentDelete: permanentlyDeleteItem,
                   ),
                 ),
               );
@@ -62,11 +67,13 @@ class DeleteNote extends HookWidget {
 class RecycleBinPage extends HookWidget {
   final List<String> recycleBin;
   final Function(String) onRestore;
+  final Function(String) onPermanentDelete;
 
   const RecycleBinPage({
     super.key,
     required this.recycleBin,
     required this.onRestore,
+    required this.onPermanentDelete,
   });
 
   @override
@@ -77,6 +84,11 @@ class RecycleBinPage extends HookWidget {
     void restoreItem(String item) {
       localRecycleBin.value = List.from(localRecycleBin.value)..remove(item);
       onRestore(item);
+    }
+
+    void permanentlyDelete(String item) {
+      localRecycleBin.value = List.from(localRecycleBin.value)..remove(item);
+      onPermanentDelete(item);
     }
 
     return Scaffold(
@@ -91,11 +103,22 @@ class RecycleBinPage extends HookWidget {
             color: Colors.grey[300],
             child: ListTile(
               title: Text(localRecycleBin.value[index]),
-              trailing: IconButton(
-                icon: const Icon(Icons.restore, color: Colors.green),
-                onPressed: () {
-                  restoreItem(localRecycleBin.value[index]);
-                },
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.restore, color: Colors.green),
+                    onPressed: () {
+                      restoreItem(localRecycleBin.value[index]);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete_forever, color: Colors.red),
+                    onPressed: () {
+                      permanentlyDelete(localRecycleBin.value[index]);
+                    },
+                  ),
+                ],
               ),
             ),
           );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
+import 'package:samsung_notes/note_model_folder/notemodel.dart';
 
 class BinnedNoteCard extends StatelessWidget {
-  final Trash bin;
+  final Note bin;
   final int index;
 
   const BinnedNoteCard({super.key, required this.bin, required this.index});
@@ -25,7 +25,7 @@ class BinnedNoteCard extends StatelessWidget {
                 width: double.infinity,
                 child: Text(
                   textAlign: TextAlign.start,
-                  bin.deletedBody,
+                  bin.body,
                   style: const TextStyle(fontSize: 16),
                   maxLines: 5,
                   overflow: TextOverflow.fade,
@@ -37,7 +37,7 @@ class BinnedNoteCard extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 15, right: 15),
           child: Text(
-            bin.deletedTitle,
+            bin.title,
             style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 17,

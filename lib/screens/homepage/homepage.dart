@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:samsung_notes/note_model_folder/binned_note_model.dart';
 import 'package:samsung_notes/note_model_folder/note_card.dart';
 import 'package:samsung_notes/note_model_folder/notemodel.dart';
 import 'package:samsung_notes/screens/create_note_folder/create_note.dart';
@@ -13,7 +12,7 @@ class HomePage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notes = useState<List<Note>>([]);
-    final bin = useState<List<Trash>>([]);
+    final bin = useState<List<Note>>([]);
 
     void addNote(Note note) {
       notes.value = [...notes.value, note];
@@ -23,16 +22,16 @@ class HomePage extends HookWidget {
       notes.value[index] = updatedNote;
     }
 
-    // void onRestore(Trash note) {
-    //   trashNotes.value = [...trashNotes.value..remove(note)];
-    //   onNoteRestored(note); // Pass the restored note back
-    //   print('Restored: ${note.deletedTitle}');
-    // }
+    void restoreNote(Note restored) {
+      notes.value=[...notes.value,restored];
+      print('Note restored to home: ${restored.title}');
+    }
 
     return Scaffold(
       key: NotesDrower.drawerKey,
       drawer: NotesDrower(
         bin: bin.value,
+        restoreNote:restoreNote
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
