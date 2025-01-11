@@ -98,7 +98,7 @@ class NotesDrower extends HookWidget {
             DrawerContainer(
                 destination: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => DeleteNote()));
+                      MaterialPageRoute(builder: (context) => deleteNote()));
                 },
                 child: Row(
                   children: [

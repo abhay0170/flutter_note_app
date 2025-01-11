@@ -23,16 +23,12 @@ class HomePage extends HookWidget {
     }
 
     void restoreNote(Note restored) {
-      notes.value=[...notes.value,restored];
-      print('Note restored to home: ${restored.title}');
+      notes.value = [...notes.value, restored];
     }
 
     return Scaffold(
       key: NotesDrower.drawerKey,
-      drawer: NotesDrower(
-        bin: bin.value,
-        restoreNote:restoreNote
-      ),
+      drawer: NotesDrower(bin: bin.value, restoreNote: restoreNote),
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         slivers: [
@@ -58,91 +54,122 @@ class HomePage extends HookWidget {
               ),
             ),
           ),
-          SliverAppBar(
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            pinned: true,
-            toolbarHeight: 50,
-            title: Title(
-              color: Theme.of(context).colorScheme.surface,
-              child: Text("All Notes"),
-            ),
-            actions: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.picture_as_pdf)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-              PopupMenuButton(
-                  itemBuilder: (context) => [
-                        PopupMenuItem(child: Text("Edit")),
-                        PopupMenuItem(child: Text("View")),
-                        PopupMenuItem(child: Text("Unpin favourites from top"))
-                      ])
-            ],
-          ),
+          notes.value.isEmpty
+              ? SliverAppBar(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  pinned: true,
+                  toolbarHeight: 50,
+                  title: Title(
+                    color: Theme.of(context).colorScheme.surface,
+                    child: Text("All Notes"),
+                  ),
+                  actions: [
+                    IconButton(
+                        onPressed: () {}, icon: Icon(Icons.picture_as_pdf)),
+                  ],
+                )
+              : SliverAppBar(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  pinned: true,
+                  toolbarHeight: 50,
+                  title: Title(
+                    color: Theme.of(context).colorScheme.surface,
+                    child: Text("All Notes"),
+                  ),
+                  actions: [
+                    IconButton(
+                        onPressed: () {}, icon: Icon(Icons.picture_as_pdf)),
+                    IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+                    // IconButton(
+                    //     onPressed: () {
+                    //       // delete
+                    //     },
+                    //     icon: Icon(Icons.delete))
+                    PopupMenuButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        itemBuilder: (context) => [
+                              PopupMenuItem(child: Text("Edit")),
+                              PopupMenuItem(child: Text("View")),
+                              PopupMenuItem(
+                                  child: Text("Unpin favourites from top"))
+                            ])
+                  ],
+                ),
           SliverToBoxAdapter(
-            child: Container(
-              color: Theme.of(context).colorScheme.surface,
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+            child: notes.value.isEmpty
+                ? SizedBox(height: 300, child: Center(child: Text("no notes")))
+                : Container(
+                    color: Theme.of(context).colorScheme.surface,
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(
                       children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(shadowColor: null),
+                        SizedBox(
+                          height: 50,
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Icon(
-                                Icons.sort,
-                                color: Theme.of(context).colorScheme.secondary,
+                              ElevatedButton(
+                                onPressed: () {},
+                                style:
+                                    ElevatedButton.styleFrom(shadowColor: null),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.sort,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                                    Text("Date created"),
+                                  ],
+                                ),
                               ),
-                              Text("Date created"),
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.arrow_downward)),
                             ],
                           ),
                         ),
-                        IconButton(
-                            onPressed: () {}, icon: Icon(Icons.arrow_downward)),
+                        Container(
+                          color: Theme.of(context).colorScheme.surface,
+                          height: MediaQuery.of(context).size.height - 50,
+                          child: GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                childAspectRatio: 0.6,
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 10.0,
+                                mainAxisSpacing: 10.0,
+                              ),
+                              itemCount: notes.value.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () async {
+                                    final updatedNote =
+                                        await Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                      builder: (context) => UpdateNote(
+                                        note: notes.value[index],
+                                        bin: bin.value,
+                                        index: index,
+                                      ),
+                                    ));
+                                    if (updatedNote == null) {
+                                      notes.value.removeAt(index);
+                                      notes.value = [...notes.value];
+                                    } else {
+                                      newUpdateNote(updatedNote, index);
+                                    }
+                                  },
+                                  child: NoteCard(
+                                      note: notes.value[index], index: index),
+                                );
+                              }),
+                        ),
                       ],
                     ),
                   ),
-                  Container(
-                    color: Theme.of(context).colorScheme.surface,
-                    height: MediaQuery.of(context).size.height - 50,
-                    child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 0.6,
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 10.0,
-                        ),
-                        itemCount: notes.value.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () async {
-                              final updatedNote = await Navigator.of(context)
-                                  .push(MaterialPageRoute(
-                                builder: (context) => UpdateNote(
-                                  note: notes.value[index],
-                                  bin: bin.value,
-                                  index: index,
-                                ),
-                              ));
-                              if (updatedNote == null) {
-                                notes.value.removeAt(index);
-                                notes.value = [...notes.value];
-                              } else {
-                                newUpdateNote(updatedNote, index);
-                              }
-                            },
-                            child: NoteCard(
-                                note: notes.value[index], index: index),
-                          );
-                        }),
-                  ),
-                ],
-              ),
-            ),
           ),
         ],
       ),
