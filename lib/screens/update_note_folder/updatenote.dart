@@ -10,8 +10,8 @@ class UpdateNote extends HookWidget {
 
   const UpdateNote({
     super.key,
-    required this.note,
     required this.bin,
+    required this.note,
     required this.index,
   });
 
@@ -37,7 +37,6 @@ class UpdateNote extends HookWidget {
       bin.add(Note(
           title: updatedTitleController.text,
           body: updatedBodyController.text));
-      print("title: ${bin.last.title}, body: ${bin.last.body}");
       Navigator.pop(context, null);
     }
 

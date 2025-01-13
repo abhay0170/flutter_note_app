@@ -114,7 +114,7 @@ class Recyclebin extends HookWidget {
                           itemCount: trashNotes.value.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              onLongPress: () async {
+                              onTap: () async {
                                 final restoredNote =
                                     await Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -130,10 +130,6 @@ class Recyclebin extends HookWidget {
                                   bin.removeAt(index);
                                 }
                               },
-                              onDoubleTap: () => Checkbox(
-                                value: true,
-                                onChanged: (value) => true,
-                              ),
                               child:
                                   BinnedNoteCard(bin: bin[index], index: index),
                             );
