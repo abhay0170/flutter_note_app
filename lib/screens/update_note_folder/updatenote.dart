@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:samsung_notes/note_model_folder/notemodel.dart';
+import 'package:samsung_notes/screens/update_note_folder/updatenotepopup.dart';
 
 class UpdateNote extends HookWidget {
   final List<Note> bin;
   final Note note;
   final int index;
 
-  const UpdateNote(
-      {super.key, required this.note, required this.bin, required this.index});
+  const UpdateNote({
+    super.key,
+    required this.note,
+    required this.bin,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +37,8 @@ class UpdateNote extends HookWidget {
       bin.add(Note(
           title: updatedTitleController.text,
           body: updatedBodyController.text));
-          print("title: ${bin.last.title}, body: ${bin.last.body}");
-          Navigator.pop(context,null);
+      print("title: ${bin.last.title}, body: ${bin.last.body}");
+      Navigator.pop(context, null);
     }
 
     return Scaffold(
@@ -65,14 +70,9 @@ class UpdateNote extends HookWidget {
             icon: const Icon(Icons.search),
             tooltip: "Search",
           ),
-          IconButton(
-            onPressed: () {
-              deleteNote();
-            },
-            icon: const Icon(Icons.delete),
-            tooltip:
-                "delete", //////////////////////////////////////////////  tap delete to move to recycle bin
-          )
+          UpdatenotepopupMenu(
+            delete: deleteNote,
+          ),
         ],
       ),
       body: Padding(

@@ -48,8 +48,8 @@ class CreateNote extends HookWidget {
             icon: Icon(Icons.menu_book_rounded),
             tooltip: "Reading Mode",
           ),
-          AddPopup(),/////////////////////////////popup for add menu ////usless
-          Menupopup(),////////////////////////////pupup for menu/////////usless
+          CreateNotePopup(),/////////////////////////////popup for add menu ////usless
+          CreateNotePopupMenu(),////////////////////////////pupup for menu/////////usless
         ],
       ),
       body: Padding(
@@ -66,7 +66,7 @@ class CreateNote extends HookWidget {
       bottomNavigationBar: 
       Padding(
         padding: const EdgeInsets.only(bottom: 15),
-        child: Row(
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(onPressed: (){}, icon: Icon(Icons.draw)),
             IconButton(onPressed: (){}, icon: Icon(Icons.check_box_outlined)),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CreateNotePopupMenu extends StatelessWidget {
+class UpdatenotepopupMenu extends StatelessWidget {
+  final Function delete;
 
-  const CreateNotePopupMenu({
+  const UpdatenotepopupMenu({
     super.key,
+    required this.delete,
   });
 
   @override
@@ -83,9 +85,54 @@ class CreateNotePopupMenu extends StatelessWidget {
             IconButton(onPressed: () {}, icon: Icon(Icons.star_border)),
             IconButton(onPressed: () {}, icon: Icon(Icons.share)),
             IconButton(
-                onPressed: () {
-                },
-                icon: Icon(Icons.delete_outline_outlined))
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Confirm Deletion",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "Are you sure you want to delete?",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(
+                                      context); // Close the bottom sheet
+                                },
+                                child: Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  delete(); // Call the delete function
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Delete"),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+              icon: Icon(Icons.delete_outline_outlined),
+            )
           ],
         ))
       ],

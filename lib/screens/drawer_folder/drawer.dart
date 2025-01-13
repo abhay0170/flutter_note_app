@@ -4,20 +4,15 @@ import 'package:samsung_notes/note_model_folder/notemodel.dart';
 import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer_content.dart';
 import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer_theme.dart';
 import 'package:samsung_notes/screens/recycle_bin_folder/recyclebin.dart';
-import 'package:samsung_notes/trials_folder/trial.dart';
+import 'package:samsung_notes/screens/settings_folder/settings.dart';
 
 class NotesDrower extends HookWidget {
   static final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
 
   final List<Note> bin;
-  final void Function(Note) restoreNote;
+  final Function(Note) restoreNote;
 
-
-  const NotesDrower({
-    super.key,
-    required this.bin,
-    required this.restoreNote
-  });
+  const NotesDrower({super.key, required this.bin, required this.restoreNote});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +25,9 @@ class NotesDrower extends HookWidget {
           children: [
             ListTile(
               trailing:
-                  IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
+                  IconButton(onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Settings(),));
+                  }, icon: Icon(Icons.settings)),
             ),
             DrawerContainer(
                 destination: () => Navigator.pop(context),
@@ -45,23 +42,6 @@ class NotesDrower extends HookWidget {
                     ),
                     Text(
                       "All Notes",
-                      style: drawerContent,
-                    )
-                  ],
-                )),
-            DrawerContainer(
-                destination: () {},
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.people_alt_outlined,
-                      size: 20,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Shared Notes",
                       style: drawerContent,
                     )
                   ],
@@ -96,10 +76,7 @@ class NotesDrower extends HookWidget {
               indent: 10,
             ),
             DrawerContainer(
-                destination: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => deleteNote()));
-                },
+                destination: () {},
                 child: Row(
                   children: [
                     Icon(

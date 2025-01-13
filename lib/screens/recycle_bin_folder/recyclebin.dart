@@ -96,8 +96,7 @@ class Recyclebin extends HookWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 300),
                       child: Center(child: Text("no trashes")),
-                    )
-                  )
+                    ))
                 : Container(
                     color: Theme.of(context).colorScheme.surface,
                     height: MediaQuery.of(context).size.height,
@@ -115,7 +114,7 @@ class Recyclebin extends HookWidget {
                           itemCount: trashNotes.value.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              onTap: () async {
+                              onLongPress: () async {
                                 final restoredNote =
                                     await Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -131,6 +130,10 @@ class Recyclebin extends HookWidget {
                                   bin.removeAt(index);
                                 }
                               },
+                              onDoubleTap: () => Checkbox(
+                                value: true,
+                                onChanged: (value) => true,
+                              ),
                               child:
                                   BinnedNoteCard(bin: bin[index], index: index),
                             );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class AddPopup extends StatelessWidget {
-  const AddPopup({super.key});
+class CreateNotePopup extends StatelessWidget {
+  const CreateNotePopup({super.key});
 
   @override
   Widget build(BuildContext context) {
