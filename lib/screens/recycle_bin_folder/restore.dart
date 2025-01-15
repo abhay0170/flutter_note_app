@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:samsung_notes/note_model_folder/notemodel.dart';
 
-class Restore extends HookWidget {
+class BinNoteView extends HookWidget {
   final Note bin;
   final Function(Note) onRestore;
-  final Function(Note) onDelete; 
+  final Function(Note) onDelete;
 
-  const Restore({
+  const BinNoteView({
     super.key,
     required this.bin,
     required this.onRestore,
@@ -25,7 +25,7 @@ class Restore extends HookWidget {
           icon: const Icon(Icons.arrow_back_ios),
         ),
         title: Text(
-          bin.title, 
+          bin.title,
           style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         actions: [
@@ -34,20 +34,26 @@ class Restore extends HookWidget {
                 onRestore(bin);
                 Navigator.pop(context);
               },
-              child: Text("Restore")),
+              child: Text(
+                "Restore",
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              )),
           TextButton(
               onPressed: () {
                 onDelete(bin);
                 Navigator.pop(context);
               },
-              child: Text("Delete"))
+              child: Text("Delete",
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold)))
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
           child: Text(
-            bin.body, 
+            bin.body,
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
         ),

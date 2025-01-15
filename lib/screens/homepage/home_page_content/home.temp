@@ -16,8 +16,6 @@ class HomePage extends HookWidget {
     final storage = GetStorage();
     final notes = useState<List<Note>>([]);
     final bin = useState<List<Note>>([]);
-    final selectedNote =
-        useState<List<bool>>(List.filled(notes.value.length, false));
 
     useEffect(() {
       List storedNotes = storage.read('notes') ?? [];
@@ -29,11 +27,8 @@ class HomePage extends HookWidget {
       return null;
     }, []);
 
-    void selectAllNotes() {
-      selectedNote.value = List.filled(notes.value.length, true);
-    }
-
-//////////////////////////////////////////////////////////////////////////////////////////
+    final selectedNote =
+        useState<List<bool>>(List.filled(notes.value.length, false));
 
     void addNote(Note note) {
       notes.value = [...notes.value, note];
@@ -41,36 +36,29 @@ class HomePage extends HookWidget {
       storage.write('notes', notes.value.map((note) => note.toJson()).toList());
     }
 
+    void moveNoteToBin(int index) {
+      if (index >= 0 && index < notes.value.length) {
+        final noteToMove = notes.value[index];
+        notes.value.removeAt(index);
+        bin.value = [...bin.value, noteToMove];
+
+        storage.write(
+            'notes', notes.value.map((note) => note.toJson()).toList());
+        storage.write('bin', bin.value.map((note) => note.toJson()).toList());
+      }
+    }
+
     void newUpdateNote(Note updatedNote, int index) {
       notes.value[index] = updatedNote;
       storage.write('notes', notes.value.map((note) => note.toJson()).toList());
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////
-
-    void moveToBin() {
-      final newBin = <Note>[];
-      final remainingNotes = <Note>[];
-      final updatedSelection = <bool>[];
-
-      for (int i = 0; i < notes.value.length; i++) {
-        if (selectedNote.value[i]) {
-          newBin.add(notes.value[i]);
-        } else {
-          remainingNotes.add(notes.value[i]);
-          updatedSelection.add(false);
-        }
-      }
-
-      bin.value = [...bin.value, ...newBin];
-      notes.value = remainingNotes;
-      storage.write('notes', notes.value.map((note) => note.toJson()).toList());
-      selectedNote.value = updatedSelection;
-    }
-
     void restoreNote(Note restored) {
       notes.value = [...notes.value, restored];
-      // storage.write('notes', notes.value.map((note) => note.toJson()).toList());
+    }
+
+    void selectAllNotes() {
+      selectedNote.value = List.filled(notes.value.length, true);
     }
 
     return Scaffold(
@@ -211,9 +199,7 @@ class HomePage extends HookWidget {
                                           NoteCard(
                                               note: notes.value[index],
                                               index: index),
-                                          if (selectedNote.value.length >
-                                                  index &&
-                                              selectedNote.value[index])
+                                          if (selectedNote.value[index])
                                             Positioned(
                                                 top: 10,
                                                 left: 10,
@@ -262,11 +248,16 @@ class HomePage extends HookWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     IconButton(
-                      onPressed: () {
-                        moveToBin();
-                      },
-                      icon: Icon(Icons.delete),
-                    ),
+                        onPressed: () {
+                          for (int i = 0; i < selectedNote.value.length; i++) {
+                            if (selectedNote.value[i]) {
+                              moveNoteToBin(i);
+                              selectedNote.value[i] = false;
+                            }
+                          }
+                          selectedNote.value = [...selectedNote.value];
+                        },
+                        icon: Icon(Icons.delete)),
                     IconButton(onPressed: () {}, icon: Icon(Icons.copy)),
                     IconButton(onPressed: () {}, icon: Icon(Icons.share)),
                     IconButton(

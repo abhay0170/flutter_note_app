@@ -12,6 +12,159 @@ class Recyclebin extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final trashNotes = useState<List<Note>>(List.from(bin));
+    final selectedNote = useState<List<bool>>(List.filled(bin.length, false));
+
+    void onRestore(Note note) {
+      trashNotes.value = [...trashNotes.value..remove(note)];
+      bin.remove(note);
+      restoreNote(note);
+    }
+
+    void onDelete(Note note) {
+      trashNotes.value = [...trashNotes.value..remove(note)];
+      bin.remove(note);
+    }
+
+    void deleteSelectedNotes() {
+      trashNotes.value.removeWhere(
+          (note) => selectedNote.value[trashNotes.value.indexOf(note)]);
+      bin.removeWhere((note) => selectedNote.value[bin.indexOf(note)]);
+      selectedNote.value = List.filled(trashNotes.value.length, false);
+    }
+
+    void restoreSelectedNotes() {
+      final notesToRestore = trashNotes.value
+          .where((note) => selectedNote.value[trashNotes.value.indexOf(note)])
+          .toList(); 
+
+      bin.addAll(
+          notesToRestore);
+
+      trashNotes.value.removeWhere(
+          notesToRestore.contains); 
+      bin.removeWhere(notesToRestore
+          .contains);
+
+      selectedNote.value = List.filled(
+          trashNotes.value.length, false); 
+    }
+
+    void selectAllNotes() {
+      selectedNote.value = List.filled(trashNotes.value.length, true);
+    }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Recycle Bin"),
+        actions: [
+          if (trashNotes.value.isNotEmpty)
+            IconButton(onPressed: selectAllNotes, icon: Icon(Icons.select_all)),
+        ],
+      ),
+      body: CustomScrollView(
+        slivers: [
+          trashNotes.value.isEmpty
+              ? SliverToBoxAdapter(
+                  child: Center(child: Text("No notes in the Recycle Bin")),
+                )
+              : SliverGrid(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return GestureDetector(
+                        onTap: () async {
+                          final restoredNote = await Navigator.of(context)
+                              .push(MaterialPageRoute(
+                            builder: (context) => Restore(
+                              bin: trashNotes.value[index],
+                              onRestore: onRestore,
+                              onDelete: onDelete,
+                            ),
+                          ));
+
+                          if (restoredNote != null) {
+                            // Restore logic is handled by the `onRestore` function
+                          }
+                        },
+                        onLongPress: () => selectAllNotes(),
+                        child: Stack(
+                          children: [
+                            BinnedNoteCard(
+                                bin: trashNotes.value[index], index: index),
+                            if (selectedNote.value[index])
+                              Positioned(
+                                top: 10,
+                                left: 10,
+                                child: Checkbox(
+                                  value: selectedNote.value[index],
+                                  onChanged: (value) {
+                                    selectedNote.value[index] = value ?? false;
+                                    selectedNote.value =
+                                        List.from(selectedNote.value);
+                                  },
+                                  activeColor: Colors.deepOrange,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                    childCount: trashNotes.value.length,
+                  ),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 10.0,
+                    childAspectRatio: 0.6,
+                  ),
+                ),
+        ],
+      ),
+      bottomNavigationBar: selectedNote.value.contains(true)
+          ? BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.restore, color: Colors.black),
+                  label: 'Restore',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.delete, color: Colors.black),
+                  label: 'Delete',
+                ),
+              ],
+              onTap: (index) {
+                if (index == 0) {
+                  restoreSelectedNotes();
+                } else if (index == 1) {
+                  deleteSelectedNotes();
+                }
+              },
+            )
+          : null,
+    );
+  }
+}
+
+
+
+////////////////////////////last update/////////////
+
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:samsung_notes/note_model_folder/notemodel.dart';
+import 'package:samsung_notes/note_model_folder/recycle_card.dart';
+import 'package:samsung_notes/screens/recycle_bin_folder/restore.dart';
+
+class Recyclebin extends HookWidget {
+  final List<Note> bin;
+  final void Function(Note) restoreNote;
+
+  const Recyclebin({super.key, required this.bin, required this.restoreNote});
+
+  @override
+  Widget build(BuildContext context) {
     final binState = useState<List<Note>>(List.from(bin));
     final selectedNote = useState<List<bool>>(List.filled(bin.length, false));
 
@@ -37,28 +190,13 @@ class Recyclebin extends HookWidget {
 ////////////////////////////////////////////////////////////////////////////////////////
 
     void onRestore(Note note) {
-      binState.value.remove(note);
-      binState.value = List.from(binState.value);
-      bin.remove(note);
-      restoreNote(note);
+      binState.value.remove(note); 
+      binState.value = List.from(binState.value); 
+      bin.remove(note); 
+      restoreNote(note); 
     }
 
-    void restoreSelectedNotes() {
-      List<Note> notesToRestore = [];
-
-      for (int i = 0; i < selectedNote.value.length; i++) {
-        if (selectedNote.value[i]) {
-          Note note = binState.value[i];
-          notesToRestore.add(note);
-        }
-      }
-      for (var note in notesToRestore) {
-        binState.value.remove(note);
-        bin.remove(note);
-        restoreNote(note);
-      }
-      selectedNote.value = List.filled(binState.value.length, false);
-    }
+    
 
     return Scaffold(
       body: CustomScrollView(
@@ -160,23 +298,23 @@ class Recyclebin extends HookWidget {
                               BinnedNoteCard(bin: bin[index], index: index),
                               if (selectedNote.value.length > index &&
                                   selectedNote.value[index])
-                                Positioned(
-                                  top: 10,
-                                  left: 10,
-                                  child: Checkbox(
-                                    value: selectedNote.value[index],
-                                    onChanged: (value) {
-                                      selectedNote.value[index] =
-                                          value ?? false;
-                                      selectedNote.value =
-                                          List.from(selectedNote.value);
-                                    },
-                                    activeColor: Colors.deepOrange,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
+                              Positioned(
+                                top: 10,
+                                left: 10,
+                                child: Checkbox(
+                                  value: selectedNote.value[index],
+                                  onChanged: (value) {
+                                    selectedNote.value[index] =
+                                        value ?? false;
+                                    selectedNote.value =
+                                        List.from(selectedNote.value);
+                              },
+                                activeColor: Colors.deepOrange,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
                                 ),
+                              ),
+                              ),
                             ],
                           ),
                         );
@@ -206,30 +344,13 @@ class Recyclebin extends HookWidget {
               ],
               onTap: (index) {
                 if (index == 0) {
-                  restoreSelectedNotes();
+                  // restoreSelectedNotes();
                 } else if (index == 1) {
                   deleteSelectedNotes();
                 }
               },
             )
-          : null,
+      : null,
     );
   }
 }
-
-
-
-                          // onTap: () async {
-                          //   final restoredNote = await Navigator.of(context)
-                          //       .push(MaterialPageRoute(
-                          //     builder: (context) => BinNoteView(
-                          //       bin: bin[index],
-                          //       // onRestore: onRestore,
-                          //       onDelete: onDelete,
-                          //     ),
-                          //   ));
-
-                          //   if (restoredNote != null) {
-                          //     bin.removeAt(index);
-                          //   }
-                          // },

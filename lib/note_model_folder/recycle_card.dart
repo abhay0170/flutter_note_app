@@ -5,7 +5,11 @@ class BinnedNoteCard extends StatelessWidget {
   final Note bin;
   final int index;
 
-  const BinnedNoteCard({super.key, required this.bin, required this.index});
+  const BinnedNoteCard({
+    super.key,
+    required this.bin,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context) {
