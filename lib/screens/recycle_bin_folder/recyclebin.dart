@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:samsung_notes/note_model_folder/notemodel.dart';
 import 'package:samsung_notes/note_model_folder/recycle_card.dart';
 import 'package:samsung_notes/screens/recycle_bin_folder/restore.dart';
@@ -12,8 +13,9 @@ class Recyclebin extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final storage = GetStorage();
     final binState = useState<List<Note>>(List.from(bin));
-    final selectedNote = useState<List<bool>>(List.filled(bin.length, false));
+    final selectedNote = useState<List<bool>>([]);
 
     void selectAllNotes() {
       selectedNote.value = List.filled(bin.length, true);
@@ -24,13 +26,18 @@ class Recyclebin extends HookWidget {
     void onDelete(Note note) {
       binState.value.remove(note);
       binState.value = List.from(binState.value);
+
       bin.remove(note);
+      storage.write(
+          'bin', binState.value.map((note) => note.toJson()).toList());
     }
 
     void deleteSelectedNotes() {
       binState.value.removeWhere(
           (note) => selectedNote.value[binState.value.indexOf(note)]);
       bin.removeWhere((note) => selectedNote.value[bin.indexOf(note)]);
+      storage.write(
+          'bin', binState.value.map((note) => note.toJson()).toList());
       selectedNote.value = List.filled(binState.value.length, false);
     }
 
@@ -124,7 +131,7 @@ class Recyclebin extends HookWidget {
                   ],
                 ),
           SliverToBoxAdapter(
-            child: bin.isEmpty
+            child: binState.value.isEmpty
                 ? Container(
                     color: Theme.of(context).colorScheme.surface,
                     height: MediaQuery.of(context).size.height,
@@ -157,7 +164,8 @@ class Recyclebin extends HookWidget {
                               )),
                           child: Stack(
                             children: [
-                              BinnedNoteCard(bin: bin[index], index: index),
+                              BinnedNoteCard(
+                                  bin: binState.value[index], index: index),
                               if (selectedNote.value.length > index &&
                                   selectedNote.value[index])
                                 Positioned(

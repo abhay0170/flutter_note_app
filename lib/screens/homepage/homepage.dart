@@ -63,6 +63,7 @@ class HomePage extends HookWidget {
       }
 
       bin.value = [...bin.value, ...newBin];
+      storage.write('bin', notes.value.map((note) => note.toJson()).toList());
       notes.value = remainingNotes;
       storage.write('notes', notes.value.map((note) => note.toJson()).toList());
       selectedNote.value = updatedSelection;
