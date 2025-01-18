@@ -1,101 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter/cupertino.dart';
 
-class Settings extends HookWidget {
-  const Settings({super.key});
+class SettingsScreen extends HookWidget {
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Using useState hook to manage the state of the settings
+    // State hooks for toggles
     final autoSaveNotes = useState(true);
     final showLinksInNotes = useState(true);
-    final showWebPreviews = useState(true);
-    final hideScrollBar = useState(true);
-    final blockBackButton = useState(true);
-
+    final showWebPreviews = useState(false);
+    final hideScrollBar = useState(false);
+    final blockBackButton = useState(false);
+    // final customTheme = Theme.of(context).extension<CustomTheme>()!;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-        ),
-        title: const Text("Settings", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Text('Samsung Notes Settings'),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         children: [
-          _buildSectionHeader("General"),
-          _buildSettingItem(
-            context,
-            title: "Style of new notes",
-            icon: Icons.style,
-            onTap: () {
-              // Handle tap
-            },
+          const Text(
+            'General',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          _buildSwitchItem(
-            context,
-            title: "Auto save notes",
+          const SizedBox(height: 10),
+          _buildToggleTile(
+            title: 'Auto save notes',
             value: autoSaveNotes.value,
-            onChanged: (value) {
-              autoSaveNotes.value = value;
-            },
+            onChanged: (val) => autoSaveNotes.value = val,
           ),
           const Divider(),
-          _buildSectionHeader("Advanced"),
-          _buildSwitchItem(
-            context,
-            title: "Show links in notes",
+          const Text(
+            'Advanced',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          _buildToggleTile(
+            title: 'Show links in notes',
             value: showLinksInNotes.value,
-            onChanged: (value) {
-              showLinksInNotes.value = value;
-            },
+            onChanged: (val) => showLinksInNotes.value = val,
           ),
-          _buildSwitchItem(
-            context,
-            title: "Show web previews",
+          _buildToggleTile(
+            title: 'Show web previews',
             value: showWebPreviews.value,
-            onChanged: (value) {
-              showWebPreviews.value = value;
-            },
+            onChanged: (val) => showWebPreviews.value = val,
           ),
-          _buildSwitchItem(
-            context,
-            title: "Hide scroll bar when editing",
+          _buildToggleTile(
+            title: 'Hide scroll bar when editing',
             value: hideScrollBar.value,
-            onChanged: (value) {
-              hideScrollBar.value = value;
-            },
+            onChanged: (val) => hideScrollBar.value = val,
           ),
-          _buildSwitchItem(
-            context,
-            title: "Block back button while editing",
+          _buildToggleTile(
+            title: 'Block Back button while editing',
             value: blockBackButton.value,
-            onChanged: (value) {
-              blockBackButton.value = value;
-            },
+            onChanged: (val) => blockBackButton.value = val,
           ),
           const Divider(),
-          _buildSectionHeader("Privacy"),
-          _buildSettingItem(
-            context,
-            title: "Privacy Notice",
-            icon: Icons.privacy_tip,
+          const Text(
+            'Privacy',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          ListTile(
+            title: const Text('Privacy Notice'),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              // Handle tap
+              // Handle navigation
             },
           ),
-          _buildSettingItem(
-            context,
-            title: "About Samsung Notes",
-            icon: Icons.info,
+          ListTile(
+            title: const Text('About Samsung Notes'),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              // Handle tap
+              // Handle navigation
             },
           ),
         ],
@@ -103,35 +81,15 @@ class Settings extends HookWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-          color: Colors.black,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSettingItem(BuildContext context, {required String title, required IconData icon, required VoidCallback onTap}) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.black),
-      title: Text(title, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
-      onTap: onTap,
-    );
-  }
-
-  Widget _buildSwitchItem(BuildContext context, {required String title, required bool value, required ValueChanged<bool> onChanged}) {
+  Widget _buildToggleTile({
+    required String title,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
     return SwitchListTile(
-      title: Text(title, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+      title: Text(title),
       value: value,
       onChanged: onChanged,
-      activeColor: Colors.black,
     );
   }
 }

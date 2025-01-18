@@ -5,6 +5,7 @@ import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer
 import 'package:samsung_notes/screens/drawer_folder/drawer_content_folder/drawer_theme.dart';
 import 'package:samsung_notes/screens/recycle_bin_folder/recyclebin.dart';
 import 'package:samsung_notes/screens/settings_folder/settings.dart';
+import 'package:samsung_notes/trials_folder/trial.dart';
 
 class NotesDrower extends HookWidget {
   static final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
@@ -26,11 +27,14 @@ class NotesDrower extends HookWidget {
             ListTile(
               trailing:
                   IconButton(onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Settings(),));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsScreen(),));
                   }, icon: Icon(Icons.settings)),
             ),
             DrawerContainer(
-                destination: () => Navigator.pop(context),
+                // destination: () => Navigator.pop(context),
+                destination: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp(),));
+                },
                 child: Row(
                   children: [
                     Icon(

@@ -16,9 +16,14 @@ class Recyclebin extends HookWidget {
     final storage = GetStorage();
     final binState = useState<List<Note>>(List.from(bin));
     final selectedNote = useState<List<bool>>([]);
+    bool allNoteSelected = false;
 
     void selectAllNotes() {
       selectedNote.value = List.filled(bin.length, true);
+    }
+
+    void deselectAllNotes() {
+      selectedNote.value = List.filled(bin.length, false);
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -47,6 +52,8 @@ class Recyclebin extends HookWidget {
       binState.value.remove(note);
       binState.value = List.from(binState.value);
       bin.remove(note);
+      storage.write(
+          'bin', binState.value.map((note) => note.toJson()).toList());
       restoreNote(note);
     }
 
@@ -62,6 +69,8 @@ class Recyclebin extends HookWidget {
       for (var note in notesToRestore) {
         binState.value.remove(note);
         bin.remove(note);
+        storage.write(
+            'bin', binState.value.map((note) => note.toJson()).toList());
         restoreNote(note);
       }
       selectedNote.value = List.filled(binState.value.length, false);
@@ -111,25 +120,56 @@ class Recyclebin extends HookWidget {
                         onPressed: () {}, icon: Icon(Icons.more_vert_rounded)),
                   ],
                 )
-              : SliverAppBar(
-                  backgroundColor: Theme.of(context).colorScheme.surface,
-                  pinned: true,
-                  toolbarHeight: 50,
-                  leading: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: Icon(Icons.menu)),
-                  title: Title(
-                    color: Theme.of(context).colorScheme.surface,
-                    child: Text("Recycle Bin"),
-                  ),
-                  actions: [
-                    IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-                    IconButton(
-                        onPressed: () {}, icon: Icon(Icons.more_vert_rounded)),
-                  ],
-                ),
+              : selectedNote.value.isEmpty
+                  ? SliverAppBar(
+                      backgroundColor: Theme.of(context).colorScheme.surface,
+                      pinned: true,
+                      toolbarHeight: 50,
+                      leading: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(Icons.menu)),
+                      title: Title(
+                        color: Theme.of(context).colorScheme.surface,
+                        child: Text("Recycle Bin"),
+                      ),
+                      actions: [
+                        IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+                        IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.more_vert_rounded)),
+                      ],
+                    )
+                  : SliverAppBar(
+                      backgroundColor: Theme.of(context).colorScheme.surface,
+                      pinned: true,
+                      toolbarHeight: 50,
+                      leading: Checkbox(
+                        value: allNoteSelected,
+                        onChanged: (onoff) {
+                          if (onoff == true) {
+                            selectAllNotes();
+                            allNoteSelected == onoff;
+                          }
+                          deselectAllNotes();
+                        },
+                        activeColor: Colors.deepOrange,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      title: Title(
+                        color: Theme.of(context).colorScheme.surface,
+                        child: Text("Recycle Bin"),
+                      ),
+                      actions: [
+                        IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+                        IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.more_vert_rounded)),
+                      ],
+                    ),
           SliverToBoxAdapter(
             child: binState.value.isEmpty
                 ? Container(
@@ -224,20 +264,3 @@ class Recyclebin extends HookWidget {
     );
   }
 }
-
-
-
-                          // onTap: () async {
-                          //   final restoredNote = await Navigator.of(context)
-                          //       .push(MaterialPageRoute(
-                          //     builder: (context) => BinNoteView(
-                          //       bin: bin[index],
-                          //       // onRestore: onRestore,
-                          //       onDelete: onDelete,
-                          //     ),
-                          //   ));
-
-                          //   if (restoredNote != null) {
-                          //     bin.removeAt(index);
-                          //   }
-                          // },

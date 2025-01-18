@@ -18,6 +18,9 @@ class HomePage extends HookWidget {
     final bin = useState<List<Note>>([]);
     final selectedNote =
         useState<List<bool>>(List.filled(notes.value.length, false));
+    final scrollController = useScrollController();
+    final opacity = useState(1.0);
+    // final secondOpacity = useState(0.0);
 
     useEffect(() {
       List storedNotes = storage.read('notes') ?? [];
@@ -26,8 +29,16 @@ class HomePage extends HookWidget {
       notes.value = storedNotes.map((note) => Note.fromJson(note)).toList();
       bin.value = storedBin.map((note) => Note.fromJson(note)).toList();
 
-      return null;
-    }, []);
+      scrollController.addListener(() {
+        final offset = scrollController.offset;
+        opacity.value =
+            offset < 100 ? (1.0 - (offset / 100).clamp(0.0, 1.0)) : 0.0;
+        // secondOpacity.value =
+        //     offset > 100 ? ((offset - 100) / 100).clamp(0.0, 1.0) : 0.0;
+      });
+
+      return () => scrollController.dispose();
+    }, [scrollController]);
 
     void selectAllNotes() {
       selectedNote.value = List.filled(notes.value.length, true);
@@ -71,7 +82,7 @@ class HomePage extends HookWidget {
 
     void restoreNote(Note restored) {
       notes.value = [...notes.value, restored];
-      // storage.write('notes', notes.value.map((note) => note.toJson()).toList());
+      storage.write('notes', notes.value.map((note) => note.toJson()).toList());
     }
 
     return Scaffold(
@@ -82,6 +93,7 @@ class HomePage extends HookWidget {
         ),
         backgroundColor: Theme.of(context).colorScheme.surface,
         body: CustomScrollView(
+          controller: scrollController,
           slivers: [
             SliverAppBar(
               backgroundColor: Theme.of(context).colorScheme.surface,
@@ -94,7 +106,7 @@ class HomePage extends HookWidget {
                 title: Padding(
                   padding: const EdgeInsets.only(bottom: 50),
                   child: Opacity(
-                    opacity: 1.0,
+                    opacity: opacity.value,
                     child: Text(
                       "All Notes",
                       style: TextStyle(
@@ -112,8 +124,10 @@ class HomePage extends HookWidget {
                     toolbarHeight: 50,
                     title: Title(
                       color: Theme.of(context).colorScheme.surface,
-                      child: Text("All Notes"),
-                    ),
+                      // child: Opacity(
+                        // opacity: secondOpacity.value,
+                        child: Text("All Notes")),
+                    // ),
                     actions: [
                       IconButton(
                           onPressed: () {}, icon: Icon(Icons.picture_as_pdf)),
