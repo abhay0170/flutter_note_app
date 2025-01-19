@@ -20,7 +20,7 @@ class HomePage extends HookWidget {
         useState<List<bool>>(List.filled(notes.value.length, false));
     final scrollController = useScrollController();
     final opacity = useState(1.0);
-    // final secondOpacity = useState(0.0);
+    final secondOpacity = useState(0.0);
 
     useEffect(() {
       List storedNotes = storage.read('notes') ?? [];
@@ -33,8 +33,11 @@ class HomePage extends HookWidget {
         final offset = scrollController.offset;
         opacity.value =
             offset < 100 ? (1.0 - (offset / 100).clamp(0.0, 1.0)) : 0.0;
-        // secondOpacity.value =
-        //     offset > 100 ? ((offset - 100) / 100).clamp(0.0, 1.0) : 0.0;
+        if (offset < 100) {
+          secondOpacity.value = 0.0; // Initially invisible
+        } else {
+          secondOpacity.value = ((offset - 100) / 100).clamp(0.0, 1.0);
+        }
       });
 
       return () => scrollController.dispose();
@@ -124,10 +127,10 @@ class HomePage extends HookWidget {
                     toolbarHeight: 50,
                     title: Title(
                       color: Theme.of(context).colorScheme.surface,
-                      // child: Opacity(
-                        // opacity: secondOpacity.value,
-                        child: Text("All Notes")),
-                    // ),
+                      child: Opacity(
+                          opacity: secondOpacity.value,
+                          child: Text("All Notes")),
+                    ),
                     actions: [
                       IconButton(
                           onPressed: () {}, icon: Icon(Icons.picture_as_pdf)),
@@ -139,7 +142,10 @@ class HomePage extends HookWidget {
                     toolbarHeight: 50,
                     title: Title(
                       color: Theme.of(context).colorScheme.surface,
-                      child: Text("All Notes"),
+                      child: Opacity(
+                        opacity: secondOpacity.value,
+                        child: Text("All Notes"),
+                      ),
                     ),
                     actions: [
                       IconButton(
@@ -151,7 +157,11 @@ class HomePage extends HookWidget {
             SliverToBoxAdapter(
               child: notes.value.isEmpty
                   ? SizedBox(
-                      height: 300, child: Center(child: Text("no notes")))
+                      height: MediaQuery.of(context).size.height - 50, child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 250),
+                          child: Text("no notes"),
+                        )))
                   : Container(
                       color: Theme.of(context).colorScheme.surface,
                       height: MediaQuery.of(context).size.height,
